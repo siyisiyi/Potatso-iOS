@@ -20,7 +20,7 @@ def tunnel
 end
 
 def socket
-    pod 'CocoaAsyncSocket', '~> 7.4.3'
+    pod 'CocoaAsyncSocket'
 end
 
 target "Potatso" do
