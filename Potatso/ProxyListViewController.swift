@@ -14,6 +14,8 @@ import Eureka
 private let rowHeight: CGFloat = 107
 private let kProxyCellIdentifier = "proxy"
 
+// MARK: shadowsock代理选择页面。
+
 class ProxyListViewController: FormViewController {
 
     var proxies: [Proxy?] = []

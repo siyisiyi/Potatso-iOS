@@ -2022,7 +2022,7 @@ static char *gif_deanimate_response(struct client_state *csp)
    {
       log_error(LOG_LEVEL_DEANIMATE, "failed! (gif parsing)");
       freez(in);
-      buf_free(out);
+      buf_free1(out);
       return(NULL);
    }
    else

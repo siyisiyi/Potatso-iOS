@@ -86,8 +86,12 @@ public class AppDelegate: UIResponder, UIApplicationDelegate {
         var handled = false
         if let lifeCycleItems = appConfig.lifeCycleConfig[LifeCycleKey.openURL] {
             for item in lifeCycleItems{
-                if let res = item.object?.application?(app, openURL: url, options: options) where res{
-                    handled = res
+                if #available(iOSApplicationExtension 9.0, *) {
+                    if let res = item.object?.application?(app, openURL: url, options: options) where res{
+                        handled = res
+                    }
+                } else {
+                    // Fallback on earlier versions
                 }
             }
         }

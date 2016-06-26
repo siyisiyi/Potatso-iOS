@@ -31,6 +31,8 @@
 
 @implementation PacketTunnelProvider
 
+// 这里是将重写父类方法，
+// This function is called by the framework when a new tunnel is being created. Subclasses must override this method to perform whatever steps are necessary to establish the tunnel.
 - (void)startTunnelWithOptions:(NSDictionary *)options completionHandler:(void (^)(NSError *))completionHandler {
     [self openLog];
 
@@ -107,6 +109,8 @@
     __block NSError *proxyError;
     dispatch_group_t g = dispatch_group_create();
     dispatch_group_enter(g);
+    
+    // 开启shadowsocks代理
     [[ProxyManager sharedManager] startShadowsocks:^(int port, NSError *error) {
         proxyError = error;
         dispatch_group_leave(g);
@@ -116,6 +120,8 @@
         exit(1);
         return;
     }
+    
+    // 这个地方好像是和广告相关的，先不管
     dispatch_group_enter(g);
     [[ProxyManager sharedManager] startHttpProxy:^(int port, NSError *error) {
         proxyError = error;
@@ -126,6 +132,8 @@
         exit(1);
         return;
     }
+    
+    // 启动本地服务器
     dispatch_group_enter(g);
     [[ProxyManager sharedManager] startSocksProxy:^(int port, NSError *error) {
         proxyError = error;
@@ -138,6 +146,8 @@
     }
 }
 
+
+// 将所有流量导到iPhone开的服务器上。
 - (void)startPacketForwarders {
     __weak typeof(self) weakSelf = self;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onTun2SocksFinished) name:kTun2SocksStoppedNotification object:nil];

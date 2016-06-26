@@ -143,6 +143,7 @@ class TodayViewController: UIViewController, NCWidgetProviding, UITableViewDataS
         if indexPath.row == 0 {
             cell = tableView.dequeueReusableCellWithIdentifier(kCurrentGroupCellIndentifier, forIndexPath: indexPath)
             let name = Potatso.sharedUserDefaults().objectForKey(kDefaultGroupName) as? String
+            // MARK:
             (cell as? CurrentGroupCell)?.config(name ?? "Default".localized(), status: status, switchVPN: switchVPN)
         }
         cell.preservesSuperviewLayoutMargins = false

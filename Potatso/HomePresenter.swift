@@ -38,8 +38,8 @@ class HomePresenter: NSObject {
         self.vc = vc
     }
 
-    // MARK: - Actions
-
+    // MARK: - Actions  调用VPN类的leifa
+    
     func switchVPN() {
         VPN.switchVPN(group) { [unowned self] (error) in
             if let error = error {
@@ -49,6 +49,7 @@ class HomePresenter: NSObject {
     }
 
     func chooseProxy() {
+        // 这里上个页面传过来的proxy是Proxy类
         let chooseVC = ProxyListViewController(allowNone: true) { [unowned self] proxy in
             do {
                 try defaultRealm.write {

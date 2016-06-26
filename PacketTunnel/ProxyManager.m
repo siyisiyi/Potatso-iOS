@@ -59,6 +59,8 @@ int sock_port (int fd) {
     return manager;
 }
 
+
+// 这里拿着和远端绑定成功的本地端口启动本地服务器。
 - (void)startSocksProxy:(SocksProxyCompletion)completion {
     self.socksCompletion = [completion copy];
     NSString *confContent = [NSString stringWithContentsOfURL:[Potatso sharedSocksConfUrl] encoding:NSUTF8StringEncoding error:nil];
@@ -75,6 +77,7 @@ int sock_port (int fd) {
 - (void)onSocksProxyCallback:(int)fd {
     NSError *error;
     if (fd > 0) {
+        // 这里socksProxyPort就变成了本地服务器的监听端口。
         self.socksProxyPort = sock_port(fd);
         self.socksProxyRunning = YES;
     }else {
@@ -110,6 +113,7 @@ int sock_port (int fd) {
         profile.local_port = 0;
         profile.timeout = 600;
         profile.auth = ota;
+        // 这里建立远端的shadowsocks连接
         start_ss_local_server(profile, shadowsocks_handler, (__bridge void *)self);
     }else {
         if (self.shadowsocksCompletion) {
@@ -126,6 +130,7 @@ int sock_port (int fd) {
 - (void)onShadowsocksCallback:(int)fd {
     NSError *error;
     if (fd > 0) {
+        // 这个地方是和shadowsocks服务器绑定之后返回的local port。
         self.shadowsocksProxyPort = sock_port(fd);
         self.shadowsocksProxyRunning = YES;
     }else {
@@ -153,6 +158,7 @@ int sock_port (int fd) {
 
     [NSThread detachNewThreadSelector:@selector(_startHttpProxy:) toTarget:self withObject:confURL];
 }
+
 
 - (void)_startHttpProxy: (NSURL *)confURL {
     shadowpath_main(strdup([[confURL path] UTF8String]), http_proxy_handler, (__bridge void *)self);

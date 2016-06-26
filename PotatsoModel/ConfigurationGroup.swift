@@ -54,12 +54,12 @@ public class ConfigurationGroup: BaseModel {
     
 }
 
-extension ConfigurationGroup: CustomStringConvertible {
-    
-    public override var description: String {
-        return name
-    }
-}
+//extension ConfigurationGroup: CustomStringConvertible {
+//    
+//    public override var description: String {
+//        return name
+//    }
+//}
 
 extension ConfigurationGroup {
     
@@ -97,7 +97,7 @@ extension ConfigurationGroup {
     
 }
 
-extension ConfigurationGroup: Equatable {}
+//extension ConfigurationGroup: Equatable {}
 
 
 public func ==(lhs: ConfigurationGroup, rhs: ConfigurationGroup) -> Bool {

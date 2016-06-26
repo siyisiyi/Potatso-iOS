@@ -20,7 +20,7 @@ class CurrentGroupCell: UITableViewCell {
         contentView.addSubview(switchButton)
         setupLayout()
     }
-    
+    // MARK: 连接和断开调用的方法
     func onSwitchValueChanged() {
         switchVPN?()
     }
