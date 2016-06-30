@@ -458,6 +458,7 @@ int gif_deanimate(struct binbuffer *src, struct binbuffer *dst, int get_first_im
 
 failed:
    binbuf_free(image);
+
    return 1;
 
    /*

@@ -205,3 +205,4 @@ extension Proxy {
 public func ==(lhs: Proxy, rhs: Proxy) -> Bool {
     return lhs.uuid == rhs.uuid
 }
+

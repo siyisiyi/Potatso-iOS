@@ -20,7 +20,7 @@ def tunnel
 end
 
 def socket
-    pod 'CocoaAsyncSocket', '~> 7.4.3'
+    pod 'CocoaAsyncSocket'
 end
 
 def model
@@ -31,15 +31,15 @@ target "Potatso" do
     pod 'Aspects', :path => "./Library/Aspects/"
     pod 'Cartography'
     pod 'AsyncSwift'
-    pod 'SwiftColor', '~> 0.3.7'
+    pod 'SwiftColor'
     pod 'Appirater'
-    pod 'Eureka', '~> 1.6.0'
+    pod 'Eureka'
     pod 'MBProgressHUD'
     pod 'CallbackURLKit'
     pod 'ICDMaterialActivityIndicatorView'
     pod 'Reveal-iOS-SDK', '~> 1.6.2', :configurations => ['Debug']
-    pod 'ICSPullToRefresh', '~> 0.4'
-    pod 'ISO8601DateFormatter', '~> 0.8'
+    pod 'ICSPullToRefresh'
+    pod 'ISO8601DateFormatter'
     pod 'Alamofire'
     pod 'ObjectMapper'
     pod 'CocoaLumberjack/Swift'

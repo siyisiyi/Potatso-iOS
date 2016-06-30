@@ -49,6 +49,7 @@ public class Manager {
     public private(set) var defaultConfigGroup: ConfigurationGroup!
 
     private init() {
+        
         loadProviderManager { (manager) -> Void in
             if let manager = manager {
                 self.updateVPNStatus(manager)
@@ -86,6 +87,7 @@ public class Manager {
         case .Disconnected, .Invalid:
             self.vpnStatus = .Off
         }
+        
     }
 
     public func switchVPN(completion: ((NETunnelProviderManager?, ErrorType?) -> Void)? = nil) {
@@ -195,9 +197,13 @@ public class Manager {
     }
     
     public func regenerateConfigFiles() throws {
+        // 保存dns设置 保存到了这里：sharedGeneralConfUrl
         try generateGeneralConfig()
+        // 保存一个sock连接设置，这个sock连接是本机上搭起来的，用来讲所有流量走这个端口，保存到了这里：sharedSocksConfUrl
         try generateSocksConfig()
+        // 保存shadowsock的配置 保存到了这里：sharedProxyConfUrl
         try generateShadowsocksConfig()
+        // 这里似乎是设置http的过滤需求。
         try generateHttpProxyConfig()
     }
 
@@ -425,6 +431,8 @@ extension Manager {
         }
     }
     
+    
+    // MARK: 正式连接VPN
     public func startVPN(complete: ((NETunnelProviderManager?, ErrorType?) -> Void)? = nil) {
         startVPNWithOptions(nil, complete: complete)
     }
@@ -464,6 +472,8 @@ extension Manager {
     
     public func stopVPN() {
         // Stop provider
+        
+        
         loadProviderManager { (manager) -> Void in
             guard let manager = manager else {
                 return
@@ -490,7 +500,11 @@ extension Manager {
     }
     
     private func loadAndCreateProviderManager(complete: (NETunnelProviderManager?, ErrorType?) -> Void ) {
+        
+        
         NETunnelProviderManager.loadAllFromPreferencesWithCompletionHandler { [unowned self] (managers, error) -> Void in
+            
+            // 这里拿到回调之后的manager做事情
             if let managers = managers {
                 let manager: NETunnelProviderManager
                 if managers.count > 0 {
@@ -505,6 +519,8 @@ extension Manager {
                 let quickStartRule = NEOnDemandRuleEvaluateConnection()
                 quickStartRule.connectionRules = [NEEvaluateConnectionRule(matchDomains: ["potatso.com"], andAction: NEEvaluateConnectionRuleAction.ConnectIfNeeded)]
                 manager.onDemandRules = [quickStartRule]
+                // 这里仅仅是将一个 NETunnelProviderManager 类存进去，
+                // 类本身并不包含代理信息，会在PacketTunnelProvider中的startTunnelWithOptions方法中有回调，在回调的时候建立本地的和远端shadowsocks的连接，以及手机上所有流量从一个端口出去。
                 manager.saveToPreferencesWithCompletionHandler({ (error) -> Void in
                     if let error = error {
                         complete(nil, error)
@@ -526,6 +542,7 @@ extension Manager {
     
     public func loadProviderManager(complete: (NETunnelProviderManager?) -> Void) {
         NETunnelProviderManager.loadAllFromPreferencesWithCompletionHandler { (managers, error) -> Void in
+            
             if let managers = managers {
                 if managers.count > 0 {
                     let manager = managers[0]
@@ -537,6 +554,9 @@ extension Manager {
         }
     }
     
+    
+    
+    // 创建一个manager 这个manager是一个 NETunnelProviderManager类
     private func createProviderManager() -> NETunnelProviderManager {
         let manager = NETunnelProviderManager()
         manager.protocolConfiguration = NETunnelProviderProtocol()

@@ -161,7 +161,7 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
     }
 
 
-    // MARK: - Private Actions
+    // MARK: - Private Actions 连接VPN
 
     func switchVPN() {
         if status == .On {
@@ -235,6 +235,7 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
         }
     }
 
+    // 连接的按钮
     lazy var connectButton: FlatButton = {
         let v = FlatButton(frame: CGRect.zero)
         v.addTarget(self, action: #selector(switchVPN), forControlEvents: .TouchUpInside)

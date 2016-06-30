@@ -56,6 +56,7 @@ public class ConfigurationGroup: BaseModel {
     }
 }
 
+
 extension ConfigurationGroup {
     
     public convenience init(dictionary: [String: AnyObject], inRealm realm: Realm) throws {

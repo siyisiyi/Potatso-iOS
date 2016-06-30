@@ -19,8 +19,11 @@ private let kProxyFormEncryption = "encryption"
 private let kProxyFormPassword = "password"
 private let kProxyFormOta = "ota"
 
+
 class ProxyConfigurationViewController: FormViewController {
     
+    
+    // MARK: 添加shadowsocks代理的页面
     var upstreamProxy: Proxy
     let isEdit: Bool
     
@@ -117,6 +120,7 @@ class ProxyConfigurationViewController: FormViewController {
             }
     }
     
+    // MARK: 存储代理参数
     func save() {
         do {
             let values = form.values()
