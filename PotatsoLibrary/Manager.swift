@@ -90,6 +90,7 @@ public class Manager {
         
     }
 
+    // 在setDefaultConfigGroup方法中已经将DNS、本地sock5、远端shadowsocks账号存起来了
     public func switchVPN(completion: ((NETunnelProviderManager?, ErrorType?) -> Void)? = nil) {
         loadProviderManager { [unowned self] (manager) in
             if let manager = manager {
@@ -165,9 +166,12 @@ public class Manager {
     }
 
     public func initDefaultConfigGroup() throws {
-        if let groupUUID = Potatso.sharedUserDefaults().stringForKey(kDefaultGroupIdentifier), group = defaultRealm.objects(ConfigurationGroup).filter("uuid = '\(groupUUID)'").first{
+        if let groupUUID = Potatso.sharedUserDefaults().stringForKey(kDefaultGroupIdentifier), group = defaultRealm.objects(ConfigurationGroup).filter("uuid = '\(groupUUID)'").first
+        {
             try setDefaultConfigGroup(group)
-        }else {
+        }
+        else
+        {
             var group: ConfigurationGroup
             if let g = defaultRealm.objects(ConfigurationGroup).first {
                 group = g
@@ -186,7 +190,10 @@ public class Manager {
         }
     }
     
-    public func setDefaultConfigGroup(group: ConfigurationGroup) throws {
+    
+    // 这里是为之后连接VPN做准备
+    public func setDefaultConfigGroup(group: ConfigurationGroup) throws
+    {
         defaultConfigGroup = group
         try regenerateConfigFiles()
         let uuid = defaultConfigGroup.uuid
@@ -199,11 +206,12 @@ public class Manager {
     public func regenerateConfigFiles() throws {
         // 保存dns设置 保存到了这里：sharedGeneralConfUrl
         try generateGeneralConfig()
-        // 保存一个sock连接设置，这个sock连接是本机上搭起来的，用来讲所有流量走这个端口，保存到了这里：sharedSocksConfUrl
+        // 保存一个sock5连接设置 保存到了这里：sharedSocksConfUrl
         try generateSocksConfig()
         // 保存shadowsock的配置 保存到了这里：sharedProxyConfUrl
         try generateShadowsocksConfig()
-        // 这里似乎是设置http的过滤需求。
+        // 这里似乎是设置http的过滤需求 保存到了这里包含了本地的监听端口127.0.0.1:0、keepalive的时间、sock－time－out时间等
+        // 另外还解析了自定义的过滤规则以及本来就带有的规则
         try generateHttpProxyConfig()
     }
 
@@ -276,18 +284,28 @@ extension Manager {
         root.addChild(filter)
         
         /**
-         生成的xml的格式参见generatedXML.xml
+         生成的xml的格式参见generatedXML.xml 如下保存到了sharedSocksConfUrl中。
          */
         let socksConf = root.XMLString()
         try socksConf.writeToURL(Potatso.sharedSocksConfUrl(), atomically: true, encoding: NSUTF8StringEncoding)
     }
     
     func generateShadowsocksConfig() throws {
+        // 拿出最新的存储的Proxy
         guard let upstreamProxy = upstreamProxy where upstreamProxy.type == .Shadowsocks else {
             return
         }
+        
         let confURL = Potatso.sharedProxyConfUrl()
         let json = ["host": upstreamProxy.host, "port": upstreamProxy.port, "password": upstreamProxy.password ?? "", "authscheme": upstreamProxy.authscheme ?? "", "ota": upstreamProxy.ota]
+//        [
+//            "host"        : "remote shadowsocks server address",
+//            "port"        : "remote shadowsocks server port",
+//            "password"    : "remote shadowsocks password",
+//            "authscheme"  : "encryp type",
+//            "ota"         : "isota"
+//        ]
+
         try json.jsonString()?.writeToURL(confURL, atomically: true, encoding: NSUTF8StringEncoding)
     }
     
@@ -319,6 +337,13 @@ extension Manager {
                 break
             }
         }
+/**
+                                proxyString               defaultRouteString       defaultProxyString
+ 
+ undecided value:                 forward.   				default-route			      .
+ 
+ shadowsocks value:   forward-socks5 127.0.0.1:${ssport}   default-route-socks5     127.0.0.1:${ssport}
+ */
         let mainConf: [(String, AnyObject)] = [("confdir", confDirUrl.path!),
                                              ("templdir", templateDirPath),
                                              ("logdir", logDir),
@@ -349,39 +374,52 @@ extension Manager {
         var forwardURLProxyContent: [String] = []
         var blockContent: [String] = []
         let rules = defaultConfigGroup.ruleSets.map({ $0.rules }).flatMap({ $0 })
-        for rule in rules {
-            if rule.type == .GeoIP {
-                switch rule.action {
-                case .Direct:
-                    if (!forwardIPDirectContent.contains(rule.value)) {
+        for rule in rules
+        {
+            // 把规则拿出来,区分不同的过滤规则，通过地理位置过滤，通过ip地址过滤，通过域名匹配规则过滤
+            // 分别装进三个数组中一个不走代理，一个走代理，一个直接拒绝
+            if rule.type == .GeoIP
+            {
+                switch rule.action
+                {
+                    case .Direct:
+                        if (!forwardIPDirectContent.contains(rule.value))
+                        {
+                            forwardIPDirectContent.append(rule.value)
+                        }
+                    case .Proxy:
+                        if (!forwardIPProxyContent.contains(rule.value))
+                        {
+                            forwardIPProxyContent.append(rule.value)
+                        }
+                    case .Reject:
+                        break
+                }
+            }
+            else if (rule.type == .IPCIDR)
+            {
+                switch rule.action
+                {
+                    case .Direct:
                         forwardIPDirectContent.append(rule.value)
-                    }
-                case .Proxy:
-                    if (!forwardIPProxyContent.contains(rule.value)) {
+                    case .Proxy:
                         forwardIPProxyContent.append(rule.value)
-                    }
-                case .Reject:
-                    break
+                    case .Reject:
+                        break
                 }
-            }else if (rule.type == .IPCIDR) {
-                switch rule.action {
-                case .Direct:
-                    forwardIPDirectContent.append(rule.value)
-                case .Proxy:
-                    forwardIPProxyContent.append(rule.value)
-                case .Reject:
-                    break
-                }
-            }else {
-                switch rule.action {
-                case .Direct:
-                    forwardURLDirectContent.append(rule.pattern)
-                    break
-                case .Proxy:
-                    forwardURLProxyContent.append(rule.pattern)
-                    break
-                case .Reject:
-                    blockContent.append(rule.pattern)
+            }
+            else
+            {
+                switch rule.action
+                {
+                    case .Direct:
+                        forwardURLDirectContent.append(rule.pattern)
+                        break
+                    case .Proxy:
+                        forwardURLProxyContent.append(rule.pattern)
+                        break
+                    case .Reject:
+                        blockContent.append(rule.pattern)
                 }
             }
         }
@@ -389,34 +427,46 @@ extension Manager {
         let mainContent = mainConf.map { "\($0) \($1)"}.joinWithSeparator("\n")
         try mainContent.writeToURL(Potatso.sharedHttpProxyConfUrl(), atomically: true, encoding: NSUTF8StringEncoding)
 
-        if let _ = upstreamProxy {
-            if forwardURLProxyContent.count > 0 {
-                actionContent.append("{+forward-override{\(proxyString)}}")
+        if let _ = upstreamProxy
+        {
+            if forwardURLProxyContent.count > 0
+            {
+                actionContent.append("{+forward-override{\(proxyString)}}")  // {+forward-override{forward.}}
+                // 将通过域名走proxy的代理的匹配规则装到这个这个数组里面
                 actionContent.appendContentsOf(forwardURLProxyContent)
             }
-            if forwardIPProxyContent.count > 0 {
-                actionContent.append("{+forward-resolved-ip{\(proxyString)}}")
+            if forwardIPProxyContent.count > 0
+            {
+                actionContent.append("{+forward-resolved-ip{\(proxyString)}}")  // {+forward-resolved-ip{forward.}}
+                // 将通过ip走proxy的代理的匹配规则装到这个这个数组里面
                 actionContent.appendContentsOf(forwardIPProxyContent)
+                // 将受DNS污染的ip也装进来
                 actionContent.appendContentsOf(Pollution.dnsList.map({ $0 + "/32" }))
             }
         }
 
-        if forwardURLDirectContent.count > 0 {
+        if forwardURLDirectContent.count > 0
+        {
+            // 可以直连的域名再加进来
             actionContent.append("{+forward-override{\(directString)}}")
             actionContent.appendContentsOf(forwardURLDirectContent)
         }
 
-        if forwardIPDirectContent.count > 0 {
+        if forwardIPDirectContent.count > 0
+        {
+            // 可以直连的ip加进来
             actionContent.append("{+forward-resolved-ip{\(directString)}}")
             actionContent.appendContentsOf(forwardIPDirectContent)
         }
 
-        if blockContent.count > 0 {
+        if blockContent.count > 0
+        {
+            // 直接屏蔽掉的ip加进来
             actionContent.append("{+block{Blocked} +handle-as-empty-document}")
             actionContent.appendContentsOf(blockContent)
         }
 
-
+        // 将数组中所有的元素用换行符拼接起来组成字符串 然后存起来
         let userActionString = actionContent.joinWithSeparator("\n")
         let userActionUrl = confDirUrl.URLByAppendingPathComponent("user.action")
         try userActionString.writeToFile(userActionUrl.path!, atomically: true, encoding: NSUTF8StringEncoding)
@@ -504,6 +554,10 @@ extension Manager {
         }
     }
     
+    
+    // 这个方法是去Preferences中去找看有没有之前保存了的configuration，如果没有就创建一个.
+    // 其中manager类是NETunnelProviderManager类，之所以是这个类，因为官方文档写出来了，这个类具有自定义协议的能力
+    // Like its super class NEVPNManager, the NETunnelProviderManager class is used to configure and control VPN connections. The difference is that NETunnelProviderManager is used to to configure and control VPN connections that use a custom VPN protocol.
     private func loadAndCreateProviderManager(complete: (NETunnelProviderManager?, ErrorType?) -> Void ) {
         
         
@@ -512,9 +566,12 @@ extension Manager {
             // 这里拿到回调之后的manager做事情
             if let managers = managers {
                 let manager: NETunnelProviderManager
-                if managers.count > 0 {
+                if managers.count > 0
+                {
                     manager = managers[0]
-                }else{
+                }
+                else
+                {
                     manager = self.createProviderManager()
                 }
                 manager.enabled = true

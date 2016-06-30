@@ -35,6 +35,8 @@ class VPN {
                 completion?(error)
             }
         }
+        
+        
         Manager.sharedManager.switchVPN { (manager, error) in
             if let _ = manager {
                 Async.background(after: 2, block: { () -> Void in

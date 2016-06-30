@@ -38,7 +38,7 @@ class HomePresenter: NSObject {
         self.vc = vc
     }
 
-    // MARK: - Actions  调用VPN类的leifa
+    // MARK: - Actions  调用VPN类的类方法
     
     func switchVPN() {
         VPN.switchVPN(group) { [unowned self] (error) in
@@ -50,17 +50,23 @@ class HomePresenter: NSObject {
 
     func chooseProxy() {
         // 这里上个页面传过来的proxy是Proxy类
-        let chooseVC = ProxyListViewController(allowNone: true) { [unowned self] proxy in
-            do {
-                try defaultRealm.write {
+        let chooseVC = ProxyListViewController(allowNone: true)
+        { [unowned self] proxy in
+            do
+            {
+                try defaultRealm.write
+                {
                     self.group.proxies.removeAll()
-                    if let proxy = proxy {
+                    if let proxy = proxy
+                    {
                         self.group.proxies.append(proxy)
                     }
                 }
                 self.delegate?.handleRefreshUI()
-            }catch {
-                self.vc.showTextHUD("\("Fail to add ruleset".localized()): \((error as NSError).localizedDescription)", dismissAfterDelay: 1.5)
+            }
+        catch
+        {
+            self.vc.showTextHUD("\("Fail to add ruleset".localized()): \((error as NSError).localizedDescription)", dismissAfterDelay: 1.5)
             }
         }
         vc.navigationController?.pushViewController(chooseVC, animated: true)

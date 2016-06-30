@@ -28,12 +28,13 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
         didSet(o) {
             connectButton.enabled = [VPNStatus.On, VPNStatus.Off].contains(status)
             connectButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-            switch status {
-            case .Connecting, .Disconnecting:
-                connectButton.animating = true
-            default:
-                connectButton.setTitle(status.hintDescription, forState: .Normal)
-                connectButton.animating = false
+            switch status
+            {
+                case .Connecting, .Disconnecting:
+                    connectButton.animating = true
+                default:
+                    connectButton.setTitle(status.hintDescription, forState: .Normal)
+                    connectButton.animating = false
             }
             connectButton.backgroundColor = status.color
         }
@@ -68,9 +69,12 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
     // MARK: - HomePresenter Protocol
 
     func handleRefreshUI() {
-        if presenter.group.isDefault {
+        if presenter.group.isDefault
+        {
             status = Manager.sharedManager.vpnStatus
-        }else {
+        }
+        else
+        {
             status = .Off
         }
         updateTitle()
@@ -94,8 +98,10 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
 
     func generateProxySection() -> Section {
         let proxySection = Section()
-        if let proxy = presenter.proxy {
-            proxySection <<< ProxyRow(kFormProxies) {
+        if let proxy = presenter.proxy
+        {
+            proxySection <<< ProxyRow(kFormProxies)
+            {
                 $0.value = proxy
             }.cellSetup({ (cell, row) -> () in
                 cell.accessoryType = .DisclosureIndicator
@@ -104,7 +110,9 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
                 cell.setSelected(false, animated: true)
                 self.presenter.chooseProxy()
             })
-        }else {
+        }
+        else
+        {
             proxySection <<< LabelRow() {
                 $0.title = "Proxy".localized()
                 $0.value = "None".localized()
