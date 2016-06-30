@@ -10,6 +10,7 @@
 		234575943B38F4EAD3E2B481 /* Pods_Potatso.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E558CCABD311741F0CF9DD9 /* Pods_Potatso.framework */; };
 		671F4F760B4AA48CEDC1B834 /* Pods_TodayWidget.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83D8D7B7274BAF6E28C980D9 /* Pods_TodayWidget.framework */; };
 		6BF89D48551DF9EC9D65F0BA /* Pods_PotatsoModel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 972ACD00F18B9E461F9D38B1 /* Pods_PotatsoModel.framework */; };
+		853406101D24F10A00CBCA4D /* generatedXML.xml in Resources */ = {isa = PBXBuildFile; fileRef = 8534060F1D24F10A00CBCA4D /* generatedXML.xml */; };
 		9B07D6B31CB7A6A900182C1B /* PotatsoLibraryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B07D6B21CB7A6A900182C1B /* PotatsoLibraryTests.swift */; };
 		9B07D6B51CB7A6A900182C1B /* PotatsoLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B9B15BD1C21595B000B6541 /* PotatsoLibrary.framework */; };
 		9B07D6BE1CB7AF0000182C1B /* PotatsoModel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BC6FFEA1CB28B4B00E5EA61 /* PotatsoModel.framework */; };
@@ -313,6 +314,7 @@
 		66AB52504A6434A50F434876 /* Pods-TodayWidget.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TodayWidget.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TodayWidget/Pods-TodayWidget.debug.xcconfig"; sourceTree = "<group>"; };
 		6779B40186E2772C79CE2A52 /* Pods-PotatsoModel.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PotatsoModel.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PotatsoModel/Pods-PotatsoModel.debug.xcconfig"; sourceTree = "<group>"; };
 		83D8D7B7274BAF6E28C980D9 /* Pods_TodayWidget.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TodayWidget.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8534060F1D24F10A00CBCA4D /* generatedXML.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = generatedXML.xml; sourceTree = "<group>"; };
 		86E310DB3E84260841595217 /* Pods-TodayWidget.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TodayWidget.release.xcconfig"; path = "Pods/Target Support Files/Pods-TodayWidget/Pods-TodayWidget.release.xcconfig"; sourceTree = "<group>"; };
 		89E573E7B926BE00ECB260CC /* Pods-Potatso.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Potatso.release.xcconfig"; path = "Pods/Target Support Files/Pods-Potatso/Pods-Potatso.release.xcconfig"; sourceTree = "<group>"; };
 		8AB4A0AD4E706A738479B24F /* Pods-PacketTunnel.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PacketTunnel.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PacketTunnel/Pods-PacketTunnel.debug.xcconfig"; sourceTree = "<group>"; };
@@ -1185,6 +1187,7 @@
 			children = (
 				9B9B15BF1C21595B000B6541 /* PotatsoLibrary.h */,
 				9BC215CB1CB5E584002AADD1 /* Manager.swift */,
+				8534060F1D24F10A00CBCA4D /* generatedXML.xml */,
 				9BF3034C1CCA20D80096588E /* Logging.swift */,
 				9BC215C61CB51148002AADD1 /* Config.swift */,
 				9BB3F73E1CC60B5300C2DD05 /* Image.swift */,
@@ -2020,7 +2023,6 @@
 				C3C08B03B4385C6E3D0C6BD3 /* [CP] Embed Pods Frameworks */,
 				CEAA98250F3F02F453B0118B /* [CP] Copy Pods Resources */,
 				9B07D6BC1CB7AA7100182C1B /* CopyFiles */,
-				BA4C15DFC5B5BB3A0133C8EF /* [CP] Embed Pods Frameworks */,
 				8533E9079437E99384941077 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
@@ -2045,9 +2047,6 @@
 				9B8706081C1D788F00651424 /* Embed App Extensions */,
 				9B9B15821C1ECADF000B6541 /* Embed Frameworks */,
 				8DCB3CA2AD6E2F329E6058FD /* [CP] Embed Pods Frameworks */,
-				9B9E946C1CBA6F0A003FBC47 /* Cartahge */,
-				9B9C520E1CA7A19E00681FE7 /* Fabric */,
-				EE2DCE01E31A764A094282A4 /* [CP] Embed Pods Frameworks */,
 				7F5FECF0328ABB93E7B81EF0 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
@@ -2114,7 +2113,6 @@
 				9B8705F81C1D788F00651424 /* Resources */,
 				521D3898EEDAF62F54EF29AD /* [CP] Copy Pods Resources */,
 				C749E5DF1B887BE3E53F4459 /* [CP] Embed Pods Frameworks */,
-				9BC858AF1C34C5AA00992032 /* Framework Hack */,
 			);
 			buildRules = (
 			);
@@ -2129,7 +2127,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9B9B15C61C21595C000B6541 /* Build configuration list for PBXNativeTarget "PotatsoLibrary" */;
 			buildPhases = (
-
 				CE2BE6BC62DACD649F659F98 /* [CP] Check Pods Manifest.lock */,
 				9B9B15B91C21595B000B6541 /* Frameworks */,
 				9B9B15B81C21595B000B6541 /* Sources */,
@@ -2168,13 +2165,10 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9BC6FFF31CB28B4B00E5EA61 /* Build configuration list for PBXNativeTarget "PotatsoModel" */;
 			buildPhases = (
-				EF6682250D7E8504FEDDD7AD /* [CP] Check Pods Manifest.lock */,
 				9BC6FFE51CB28B4B00E5EA61 /* Sources */,
 				9BC6FFE61CB28B4B00E5EA61 /* Frameworks */,
 				9BC6FFE71CB28B4B00E5EA61 /* Headers */,
 				9BC6FFE81CB28B4B00E5EA61 /* Resources */,
-				337A8A0CFB5E8647AF33D41C /* [CP] Copy Pods Resources */,
-				B84B4E341D2176D6002B946A /* Framework Hack */,
 			);
 			buildRules = (
 			);
@@ -2189,13 +2183,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9BDA62661CAE2576007F2581 /* Build configuration list for PBXNativeTarget "PacketProcessor" */;
 			buildPhases = (
-
 				A0B0CFBA3D3233403F33D576 /* [CP] Check Pods Manifest.lock */,
 				9BDA62561CAE2576007F2581 /* Sources */,
 				9BDA62571CAE2576007F2581 /* Frameworks */,
 				9BDA62581CAE2576007F2581 /* Headers */,
 				9BDA62591CAE2576007F2581 /* Resources */,
-
 				B30F6FBA09A67A41B15ECBDF /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
@@ -2378,6 +2370,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				853406101D24F10A00CBCA4D /* generatedXML.xml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2407,7 +2400,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-
 		025B72D218ACF167BDC81D87 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2423,7 +2415,6 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TodayWidget/Pods-TodayWidget-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-
 		521D3898EEDAF62F54EF29AD /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2439,22 +2430,36 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PotatsoLibrary/Pods-PotatsoLibrary-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		267B30C8EDE6E821A0AC5900 /* [CP] Check Pods Manifest.lock */ = {
+		7F5FECF0328ABB93E7B81EF0 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "[CP] Check Pods Manifest.lock";
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Potatso/Pods-Potatso-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-
+		8533E9079437E99384941077 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PotatsoLibraryTests/Pods-PotatsoLibraryTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		89BB5BB390F947538514EC66 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2477,7 +2482,6 @@
 			);
 			inputPaths = (
 			);
-
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
 			);
@@ -2486,7 +2490,6 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PacketProcessor/Pods-PacketProcessor-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-
 		8DCB3CA2AD6E2F329E6058FD /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2494,7 +2497,6 @@
 			);
 			inputPaths = (
 			);
-
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 			);
@@ -2503,22 +2505,6 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PotatsoModel/Pods-PotatsoModel-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		46E2C5B0876EEEFA2316E577 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PacketTunnel/Pods-PacketTunnel-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-
 		990BA1846D8ACEA12C7AD454 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2532,51 +2518,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		7F5FECF0328ABB93E7B81EF0 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Potatso/Pods-Potatso-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		82A7034AA407F637047639C3 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		8533E9079437E99384941077 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PotatsoLibraryTests/Pods-PotatsoLibraryTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		9B8193EB1CBE37BB00BE320D /* Framework Hack */ = {
@@ -2607,7 +2548,6 @@
 			shellPath = /bin/sh;
 			shellScript = "file=\"${PROJECT_DIR}/Confidential/env.plist\"\nif [ -f $file ]\nthen\n    echo \"env.plist found.\"\n    FABRIC_SECRET=$(/usr/libexec/PlistBuddy -c \"Print :FabricSecret\" $file)\n    FABRIC_API_KEY=$(/usr/libexec/PlistBuddy -c \"Print :Fabric:APIKey\" \"${PROJECT_DIR}/Potatso/Info.plist\")\nelse\n    echo \"env.plist not found.\"\n    FABRIC_SECRET=\"fake secret\"\n    FABRIC_API_KEY=\"0000000000000000000000000000000000000000\"\nfi\necho $FABRIC_SECRET\necho $FABRIC_API_KEY\n\"${PODS_ROOT}/Fabric/run\" $FABRIC_API_KEY ${FABRIC_SECRET}";
 		};
-
 		A693D34DED78F5B09428A506 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2616,7 +2556,6 @@
 			inputPaths = (
 				"$(SRCROOT)/Carthage/Build/iOS/YAML.framework",
 			);
-
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 			);
@@ -2624,7 +2563,6 @@
 			shellPath = /bin/sh;
 			shellScript = "/usr/local/bin/carthage copy-frameworks";
 		};
-
 		B30F6FBA09A67A41B15ECBDF /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2632,7 +2570,6 @@
 			);
 			inputPaths = (
 			);
-
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 			);
@@ -2640,7 +2577,6 @@
 			shellPath = /bin/sh;
 			shellScript = "cd \"${CONFIGURATION_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/\"\nif [[ -d \"Frameworks\" ]]; then\nrm -fr Frameworks\nfi";
 		};
-
 		BA88BAC6C7C0558B39F6DA19 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2648,7 +2584,6 @@
 			);
 			inputPaths = (
 			);
-
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 			);
@@ -2657,7 +2592,6 @@
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-
 		C3C08B03B4385C6E3D0C6BD3 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2673,7 +2607,6 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PotatsoLibraryTests/Pods-PotatsoLibraryTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-
 		C749E5DF1B887BE3E53F4459 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2681,7 +2614,6 @@
 			);
 			inputPaths = (
 			);
-
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 			);
@@ -2690,7 +2622,6 @@
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-
 		CE2BE6BC62DACD649F659F98 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2706,7 +2637,6 @@
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-
 		CEAA98250F3F02F453B0118B /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2714,7 +2644,6 @@
 			);
 			inputPaths = (
 			);
-
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 			);
@@ -2723,7 +2652,6 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PacketTunnel/Pods-PacketTunnel-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-
 		D1BEB3F66F7C5E8C52709593 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2731,7 +2659,6 @@
 			);
 			inputPaths = (
 			);
-
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
 			);
@@ -2740,7 +2667,6 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Potatso/Pods-Potatso-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-
 		EFF5CA1B20A1B18FF95EB3CB /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;

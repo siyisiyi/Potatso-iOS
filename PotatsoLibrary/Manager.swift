@@ -254,17 +254,19 @@ extension Manager {
         root.addChild(authchoice)
         
         let filter = NSXMLElement.elementWithName("filter") as! NSXMLElement
-        if let upstreamProxy = upstreamProxy {
+        if let upstreamProxy = upstreamProxy
+        {
             let chain = NSXMLElement.elementWithName("chain", children: nil, attributes: [NSXMLNode.attributeWithName("name", stringValue: upstreamProxy.name)]) as! NSXMLElement
-            switch upstreamProxy.type {
-            case .Shadowsocks:
-                let uriString = "socks5://127.0.0.1:${ssport}"
-                let uri = NSXMLElement.elementWithName("uri", children: nil, attributes: [NSXMLNode.attributeWithName("value", stringValue: uriString)]) as! NSXMLElement
-                chain.addChild(uri)
-                let authscheme = NSXMLElement.elementWithName("authscheme", children: nil, attributes: [NSXMLNode.attributeWithName("value", stringValue: "anonymous")]) as! NSXMLElement
-                chain.addChild(authscheme)
-            default:
-                break
+            switch upstreamProxy.type
+            {
+                case .Shadowsocks:
+                    let uriString = "socks5://127.0.0.1:${ssport}"
+                    let uri = NSXMLElement.elementWithName("uri", children: nil, attributes: [NSXMLNode.attributeWithName("value", stringValue: uriString)]) as! NSXMLElement
+                    chain.addChild(uri)
+                    let authscheme = NSXMLElement.elementWithName("authscheme", children: nil, attributes: [NSXMLNode.attributeWithName("value", stringValue: "anonymous")]) as! NSXMLElement
+                    chain.addChild(authscheme)
+                default:
+                    break
             }
             root.addChild(chain)
         }
@@ -273,6 +275,9 @@ extension Manager {
         filter.addChild(accept)
         root.addChild(filter)
         
+        /**
+         生成的xml的格式参见generatedXML.xml
+         */
         let socksConf = root.XMLString()
         try socksConf.writeToURL(Potatso.sharedSocksConfUrl(), atomically: true, encoding: NSUTF8StringEncoding)
     }
