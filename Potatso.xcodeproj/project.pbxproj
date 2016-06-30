@@ -157,6 +157,7 @@
 		9BF3034B1CCA1B060096588E /* BaseEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF3034A1CCA1B060096588E /* BaseEmptyView.swift */; };
 		9BF3034D1CCA20D80096588E /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF3034C1CCA20D80096588E /* Logging.swift */; };
 		9BFE21C21CD0E35D001AB019 /* DetailRawTextCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BFE21C11CD0E35D001AB019 /* DetailRawTextCell.swift */; };
+		A01B9685DA2B32500BA75CFB /* Pods_PotatsoLibraryTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3640DC5B1F938BFA91DD49CD /* Pods_PotatsoLibraryTests.framework */; };
 		A4564DF27925368D6CA67F7D /* Pods_PacketTunnel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B03E5F0D3FAB0B3302CA1A4E /* Pods_PacketTunnel.framework */; };
 		A5E749DA2197E384CBCBA84B /* Pods_PacketProcessor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 310645853592796E08924EB3 /* Pods_PacketProcessor.framework */; };
 		B803A6961D0165EA003EA9AA /* CloudViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B803A6951D0165EA003EA9AA /* CloudViewController.swift */; };
@@ -305,6 +306,7 @@
 		13357BD365CD7C295F1BA3C0 /* Pods-PotatsoModel.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PotatsoModel.release.xcconfig"; path = "Pods/Target Support Files/Pods-PotatsoModel/Pods-PotatsoModel.release.xcconfig"; sourceTree = "<group>"; };
 		1E558CCABD311741F0CF9DD9 /* Pods_Potatso.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Potatso.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		310645853592796E08924EB3 /* Pods_PacketProcessor.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PacketProcessor.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3640DC5B1F938BFA91DD49CD /* Pods_PotatsoLibraryTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PotatsoLibraryTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		50F18DE964A0791935D07268 /* Pods-PacketTunnel.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PacketTunnel.release.xcconfig"; path = "Pods/Target Support Files/Pods-PacketTunnel/Pods-PacketTunnel.release.xcconfig"; sourceTree = "<group>"; };
 		5230B5D70A0595F06A9F15F8 /* Pods-PotatsoLibraryTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PotatsoLibraryTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PotatsoLibraryTests/Pods-PotatsoLibraryTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5800BF48973D41E6DFC2DF35 /* Pods-Potatso.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Potatso.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Potatso/Pods-Potatso.debug.xcconfig"; sourceTree = "<group>"; };
@@ -867,6 +869,7 @@
 			files = (
 				9B07D6BE1CB7AF0000182C1B /* PotatsoModel.framework in Frameworks */,
 				9B07D6B51CB7A6A900182C1B /* PotatsoLibrary.framework in Frameworks */,
+				A01B9685DA2B32500BA75CFB /* Pods_PotatsoLibraryTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1959,6 +1962,7 @@
 				DFAF05C4CA29869A03E25A65 /* Pods_PotatsoLibrary.framework */,
 				83D8D7B7274BAF6E28C980D9 /* Pods_TodayWidget.framework */,
 				972ACD00F18B9E461F9D38B1 /* Pods_PotatsoModel.framework */,
+				3640DC5B1F938BFA91DD49CD /* Pods_PotatsoLibraryTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
