@@ -17,16 +17,20 @@ class VPN {
     static func switchVPN(group: ConfigurationGroup, completion: ((ErrorType?) -> Void)? = nil) {
         let defaultUUID = Manager.sharedManager.defaultConfigGroup.uuid
         let isDefault = defaultUUID == group.uuid
-        if !isDefault {
+        if !isDefault
+        {
             Manager.sharedManager.stopVPN()
             Async.main(after: 1) {
                 _switchDefaultVPN(group, completion: completion)
             }
-        }else {
+        }
+        else
+        {
             _switchDefaultVPN(group, completion: completion)
         }
     }
 
+    // 一个group对象包含了shadossock连接的配置信息：服务器信息、过滤条件、名字、是否全局等
     private static func _switchDefaultVPN(group: ConfigurationGroup, completion: ((ErrorType?) -> Void)? = nil) {
         do {
             try Manager.sharedManager.setDefaultConfigGroup(group)
@@ -38,12 +42,14 @@ class VPN {
         
         
         Manager.sharedManager.switchVPN { (manager, error) in
-            if let _ = manager {
+            if let _ = manager
+            {
                 Async.background(after: 2, block: { () -> Void in
                     Appirater.userDidSignificantEvent(false)
                 })
             }
-            Async.main{
+            Async.main
+            {
                 completion?(error)
             }
         }

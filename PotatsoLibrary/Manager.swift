@@ -100,6 +100,7 @@ public class Manager {
             guard current != .Connecting && current != .Disconnecting else {
                 return
             }
+            
             if current == .Off {
                 self.startVPN { (manager, error) -> Void in
                     completion?(manager, error)
@@ -191,7 +192,7 @@ public class Manager {
     }
     
     
-    // 这里是为之后连接VPN做准备
+    // 这里是为之后连接VPN做准备, group对象包含了shadossock连接的配置信息：服务器信息、过滤条件、名字、是否全局等
     public func setDefaultConfigGroup(group: ConfigurationGroup) throws
     {
         defaultConfigGroup = group
@@ -500,15 +501,18 @@ extension Manager {
             complete?(nil, error)
             return
         }
-        // Load provider
+        
         loadAndCreateProviderManager { (manager, error) -> Void in
             if let error = error {
                 complete?(nil, error)
             }else{
-                guard let manager = manager else {
+                
+                guard let manager = manager else
+                {
                     complete?(nil, ManagerError.InvalidProvider)
                     return
                 }
+                // 拿到了manager开启vpn连接
                 if manager.connection.status == .Disconnected || manager.connection.status == .Invalid {
                     do {
                         try manager.connection.startVPNTunnelWithOptions(options)
@@ -576,21 +580,29 @@ extension Manager {
                 }
                 manager.enabled = true
                 manager.localizedDescription = AppEnv.appName
+                // vpn server 的地址
                 manager.protocolConfiguration?.serverAddress = AppEnv.appName
                 manager.onDemandEnabled = true
                 let quickStartRule = NEOnDemandRuleEvaluateConnection()
+                // 当请求potatso.com的时候就会自动连接vpn
                 quickStartRule.connectionRules = [NEEvaluateConnectionRule(matchDomains: ["potatso.com"], andAction: NEEvaluateConnectionRuleAction.ConnectIfNeeded)]
                 manager.onDemandRules = [quickStartRule]
                 // 这里仅仅是将一个 NETunnelProviderManager 类存进去，
                 // 类本身并不包含代理信息，会在PacketTunnelProvider中的startTunnelWithOptions方法中有回调，在回调的时候建立本地的和远端shadowsocks的连接，以及手机上所有流量从一个端口出去。
                 manager.saveToPreferencesWithCompletionHandler({ (error) -> Void in
-                    if let error = error {
+                    if let error = error
+                    {
                         complete(nil, error)
-                    }else{
+                    }
+                    else
+                    {
                         manager.loadFromPreferencesWithCompletionHandler({ (error) -> Void in
-                            if let error = error {
+                            if let error = error
+                            {
                                 complete(nil, error)
-                            }else{
+                            }
+                            else
+                            {
                                 complete(manager, nil)
                             }
                         })

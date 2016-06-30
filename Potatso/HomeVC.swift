@@ -169,7 +169,7 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
     }
 
 
-    // MARK: - Private Actions 连接VPN
+    // MARK: - Private Actions 点击连接按钮连接VPN
 
     func switchVPN() {
         if status == .On {
