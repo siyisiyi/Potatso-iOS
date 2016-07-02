@@ -47,24 +47,34 @@
 }
 
 + (NSError *)setupWithPacketTunnelFlow:(NEPacketTunnelFlow *)packetFlow {
-    if (packetFlow == nil) {
+    if (packetFlow == nil)
+    {
         return [NSError errorWithDomain:kTunnelInterfaceErrorDomain code:1 userInfo:@{NSLocalizedDescriptionKey: @"PacketTunnelFlow can't be nil."}];
     }
+    // 用单例把这个通道持有住
     [TunnelInterface sharedInterface].tunnelPacketFlow = packetFlow;
     
     NSError *error;
+    // 拿到单例中已经实例化过的udp socket对象，并确定了socket数据回来的时候回调的对象。
     GCDAsyncUdpSocket *udpSocket = [TunnelInterface sharedInterface].udpSocket;
+    // bind本机的随意一个端口
     [udpSocket bindToPort:0 error:&error];
-    if (error) {
+    if (error)
+    {
         return [NSError errorWithDomain:kTunnelInterfaceErrorDomain code:1 userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"UDP bind fail(%@).", [error localizedDescription]]}];
     }
+    // 主动开始接收sock中过来的数据
     [udpSocket beginReceiving:&error];
-    if (error) {
+    if (error)
+    {
         return [NSError errorWithDomain:kTunnelInterfaceErrorDomain code:1 userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"UDP bind fail(%@).", [error localizedDescription]]}];
     }
     
     int fds[2];
-    if (pipe(fds) < 0) {
+    // 因为之前vpn连接已经完成，而且之后又绑定了一个本地的socket端口
+    // 这里试图创建一个pipe，创建的时候传了一个int *进去，如果创建完成fds[0] refers to the read end of the pipe. fds[1] refers to the write end of the pipe.
+    if (pipe(fds) < 0)
+    {
         return [NSError errorWithDomain:kTunnelInterfaceErrorDomain code:-1 userInfo:@{NSLocalizedDescriptionKey: @"Unable to pipe."}];
     }
     [TunnelInterface sharedInterface].readFd = fds[0];

@@ -32,18 +32,29 @@
 @implementation PacketTunnelProvider
 
 // 这里是将重写父类方法，
+// 当app里的NETunnelProviderManager对象调用startTunnelWithOptions时，控制流程就跳到app extension里的startTunnelWithOptions方法。iOS会自动加载app extension。
 // This function is called by the framework when a new tunnel is being created. Subclasses must override this method to perform whatever steps are necessary to establish the tunnel.
 - (void)startTunnelWithOptions:(NSDictionary *)options completionHandler:(void (^)(NSError *))completionHandler {
+    // 将nslog的内容存起来
     [self openLog];
-
+    
+    
     NSLog(@"starting potatso tunnel...");
+    // 这里已经将vpn连接上了，self.packetFlow中有发向vpn的数据和从vpn返回的数据。
+    // 在这个方法中又生成了一条pipe通道，并将这条pipe通道的入口和出口记录在TunnelInterface sharedInterface中
     NSError *error = [TunnelInterface setupWithPacketTunnelFlow:self.packetFlow];
-    if (error) {
+    if (error)
+    {
+        // 这一句是告诉系统我这边拦截处理出错了，我这边不负责处理了，你去处理吧
         completionHandler(error);
         exit(1);
         return;
     }
     self.pendingStartCompletion = completionHandler;
+    /**
+     1. 连接远端的shadowsocks服务器，远端服务器的信息之前已经存起来了，本地的地址：127.0.0.1，端口是：0，意味着系统随便选择一个端口， 在这个工程中用“sock_port”函数拿到的端口
+        Another option is to specify port 0 to bind(). That will allow you to bind to a specific IP address (in case you have multiple installed) while still binding to a random port. If you need to know which port was picked, you can use getsockname() after the binding has been performed.
+     */
     [self startProxies];
     [self startPacketForwarders];
     [self setupWormhole];

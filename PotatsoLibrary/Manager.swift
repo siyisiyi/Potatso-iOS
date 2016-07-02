@@ -93,7 +93,8 @@ public class Manager {
     // 在setDefaultConfigGroup方法中已经将DNS、本地sock5、远端shadowsocks账号存起来了
     public func switchVPN(completion: ((NETunnelProviderManager?, ErrorType?) -> Void)? = nil) {
         loadProviderManager { [unowned self] (manager) in
-            if let manager = manager {
+            if let manager = manager
+            {
                 self.updateVPNStatus(manager)
             }
             let current = self.vpnStatus
@@ -345,6 +346,8 @@ extension Manager {
  
  shadowsocks value:   forward-socks5 127.0.0.1:${ssport}   default-route-socks5     127.0.0.1:${ssport}
  */
+        
+        // 这个数组实际上是用来规定了provixy的配置信息，使通过provixy的http流量转发给socks服务器
         let mainConf: [(String, AnyObject)] = [("confdir", confDirUrl.path!),
                                              ("templdir", templateDirPath),
                                              ("logdir", logDir),
@@ -497,15 +500,20 @@ extension Manager {
         // regenerate config files
         do {
             try Manager.sharedManager.regenerateConfigFiles()
-        }catch {
+        }
+        catch
+        {
             complete?(nil, error)
             return
         }
         
         loadAndCreateProviderManager { (manager, error) -> Void in
-            if let error = error {
+            if let error = error
+            {
                 complete?(nil, error)
-            }else{
+            }
+            else
+            {
                 
                 guard let manager = manager else
                 {
@@ -513,15 +521,21 @@ extension Manager {
                     return
                 }
                 // 拿到了manager开启vpn连接
-                if manager.connection.status == .Disconnected || manager.connection.status == .Invalid {
-                    do {
+                if manager.connection.status == .Disconnected || manager.connection.status == .Invalid
+                {
+                    do
+                    {
                         try manager.connection.startVPNTunnelWithOptions(options)
                         self.addVPNStatusObserver()
                         complete?(manager, nil)
-                    }catch {
+                    }
+                    catch
+                    {
                         complete?(nil, error)
                     }
-                }else{
+                }
+                else
+                {
                     self.addVPNStatusObserver()
                     complete?(manager, nil)
                 }
@@ -617,8 +631,10 @@ extension Manager {
     public func loadProviderManager(complete: (NETunnelProviderManager?) -> Void) {
         NETunnelProviderManager.loadAllFromPreferencesWithCompletionHandler { (managers, error) -> Void in
             
-            if let managers = managers {
-                if managers.count > 0 {
+            if let managers = managers
+            {
+                if managers.count > 0
+                {
                     let manager = managers[0]
                     complete(manager)
                     return
