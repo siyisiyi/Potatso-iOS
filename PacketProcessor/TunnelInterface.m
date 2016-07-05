@@ -73,6 +73,7 @@
     int fds[2];
     // 因为之前vpn连接已经完成，而且之后又绑定了一个本地的socket端口
     // 这里试图创建一个pipe，创建的时候传了一个int *进去，如果创建完成fds[0] refers to the read end of the pipe. fds[1] refers to the write end of the pipe.
+    // 创建一条pipe的目的是负责进程间通信，两个进程之间实现数据流通
     if (pipe(fds) < 0)
     {
         return [NSError errorWithDomain:kTunnelInterfaceErrorDomain code:-1 userInfo:@{NSLocalizedDescriptionKey: @"Unable to pipe."}];
@@ -82,7 +83,10 @@
     return nil;
 }
 
-+ (void)startTun2Socks: (int)socksServerPort {
+// 之前已经在socksServerPort上建立了服务器，该服务器确实可以接受socks流量了，但是流量并不会直接走到socksServerPort端口上去，需要在httpProxyPort端口上接受数据，写给服务器。同样当服务器上接受数据也是需要些出去。
+// 这样就需要一个通道，这个通道由pipe函数生成每当这个pipe接收到
++ (void)startTun2Socks: (int)socksServerPort
+{
     [NSThread detachNewThreadSelector:@selector(_startTun2Socks:) toTarget:[TunnelInterface sharedInterface] withObject:@(socksServerPort)];
 }
 
@@ -98,14 +102,20 @@
 
 + (void)processPackets {
     __weak typeof(self) weakSelf = self;
-    [[TunnelInterface sharedInterface].tunnelPacketFlow readPacketsWithCompletionHandler:^(NSArray<NSData *> * _Nonnull packets, NSArray<NSNumber *> * _Nonnull protocols) {
-        for (NSData *packet in packets) {
+    // 各个app发送来数据了
+    [[TunnelInterface sharedInterface].tunnelPacketFlow readPacketsWithCompletionHandler:^(NSArray<NSData *> * _Nonnull packets, NSArray<NSNumber *> * _Nonnull protocols)
+    {
+        for (NSData *packet in packets)
+        {
             uint8_t *data = (uint8_t *)packet.bytes;
             struct ip_hdr *iphdr = (struct ip_hdr *)data;
             uint8_t proto = IPH_PROTO(iphdr);
-            if (proto == IP_PROTO_UDP) {
+            if (proto == IP_PROTO_UDP)
+            {
                 [[TunnelInterface sharedInterface] handleUDPPacket:packet];
-            }else if (proto == IP_PROTO_TCP) {
+            }
+            else if (proto == IP_PROTO_TCP)
+            {
                 [[TunnelInterface sharedInterface] handleTCPPPacket:packet];
             }
         }
@@ -114,7 +124,9 @@
 
 }
 
-- (void)_startTun2Socks: (NSNumber *)socksServerPort {
+// tun2socks是一个进程，这个进程可以做到左手连接一个tun设备，右手连接一个sock5代理，然后在两者之间做数据对拷
+- (void)_startTun2Socks: (NSNumber *)socksServerPort
+{
     char socks_server[50];
     sprintf(socks_server, "127.0.0.1:%d", (int)([socksServerPort integerValue]));
 #if TCP_DATA_LOG_ENABLE
@@ -139,6 +151,7 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:kTun2SocksStoppedNotification object:nil];
 }
 
+//处理数据写入的情况，当手机上各个app的请求数据过来了，将数据写到pipe的wirte端，写过去的是IP包，tun2socks会将写入的IP包转换为scoket流发到本地的socket服务器上去，再由本地的socket服务器发到本地的ssport去，
 - (void)handleTCPPPacket: (NSData *)packet {
     uint8_t message[TunnelMTU+2];
     memcpy(message + 2, packet.bytes, packet.length);

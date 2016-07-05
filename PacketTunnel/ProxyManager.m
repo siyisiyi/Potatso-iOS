@@ -60,8 +60,9 @@ int sock_port (int fd) {
 }
 
 
-// 这里拿着和远端绑定成功的本地端口启动本地服务器。
-- (void)startSocksProxy:(SocksProxyCompletion)completion {
+// 这里拿着和远端绑定成功的本地端口和本机的一个新开端口启动本地socket服务器。启动之后会记录那个新开的端口，记录到socksProxyPort
+- (void)startSocksProxy:(SocksProxyCompletion)completion
+{
     self.socksCompletion = [completion copy];
     NSString *confContent = [NSString stringWithContentsOfURL:[Potatso sharedSocksConfUrl] encoding:NSUTF8StringEncoding error:nil];
     confContent = [confContent stringByReplacingOccurrencesOfString:@"${ssport}" withString:[NSString stringWithFormat:@"%d", [self shadowsocksProxyPort]]];
@@ -167,7 +168,7 @@ int sock_port (int fd) {
      // ("debug", 1024+65536+1),
      ("debug", 8192),
      ("actionsfile", "user.action"),
-     (defaultRouteString, defaultProxyString),
+     (defaultRouteString, defaultProxyString),／／ 127.0.0.1:${ssport}
      // ("debug", 131071)
      ]
      */
@@ -180,6 +181,7 @@ int sock_port (int fd) {
     NSURL *actionURL = [[Potatso sharedUrl] URLByAppendingPathComponent:@"httpconf/user.action"];
     content = [NSString stringWithContentsOfURL:actionURL encoding:NSUTF8StringEncoding error:nil];
     content = [content stringByReplacingOccurrencesOfString:@"${ssport}" withString:[NSString stringWithFormat:@"%d", self.shadowsocksProxyPort]];
+    // content中包含的是http代理的过滤规则
     [content writeToURL:actionURL atomically:YES encoding:NSUTF8StringEncoding error:nil];
 
     [NSThread detachNewThreadSelector:@selector(_startHttpProxy:) toTarget:self withObject:confURL];
@@ -221,7 +223,7 @@ int sock_port (int fd) {
      　　如果你本机安装了 TOR Browser 软件包，可以使用如下语法，把 Privoxy 收到的 HTTP 请求转发给 TOR Browser 内置的 SOCKS 代理。
         forward-socks5 / 127.0.0.1:9150 .
      */
-
+    // 这个方法是作者扩展出来的，并不是privoxy本身自带的
     shadowpath_main(strdup([[confURL path] UTF8String]), http_proxy_handler, (__bridge void *)self);
 }
 

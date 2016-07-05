@@ -498,7 +498,8 @@ extension Manager {
     
     private func startVPNWithOptions(options: [String : NSObject]?, complete: ((NETunnelProviderManager?, ErrorType?) -> Void)? = nil) {
         // regenerate config files
-        do {
+        do
+        {
             try Manager.sharedManager.regenerateConfigFiles()
         }
         catch

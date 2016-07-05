@@ -40,7 +40,7 @@
     
     
     NSLog(@"starting potatso tunnel...");
-    // 这里已经将vpn连接上了，self.packetFlow中有发向vpn的数据和从vpn返回的数据。
+    // self.packetFlow中有发向vpn的数据和从vpn返回的数据。
     // 在这个方法中又生成了一条pipe通道，并将这条pipe通道的入口和出口记录在TunnelInterface sharedInterface中
     NSError *error = [TunnelInterface setupWithPacketTunnelFlow:self.packetFlow];
     if (error)
@@ -132,7 +132,7 @@
         return;
     }
     
-    // 这个地方好像是和广告相关的，先不管
+    // privoxy是一个代理软件本身不具有服务器的功能，但它能将设备上过来的http流量转换为socket流量并导向一个socket服务器这个新开的端口会记录在httpProxyPort中，会给privoxy传匹配规则过去，针对匹配规则来转换http流量
     dispatch_group_enter(g);
     [[ProxyManager sharedManager] startHttpProxy:^(int port, NSError *error) {
         proxyError = error;
@@ -144,7 +144,7 @@
         return;
     }
     
-    // 启动本地服务器
+    // 启动本地服务器socket服务器
     dispatch_group_enter(g);
     [[ProxyManager sharedManager] startSocksProxy:^(int port, NSError *error) {
         proxyError = error;
@@ -158,19 +158,24 @@
 }
 
 
-// 将所有流量导到iPhone开的服务器上。
+// 将[ProxyManager sharedManager].httpProxyPort端口的流量导到本地服务器192.0.2.2上去。
 - (void)startPacketForwarders {
     __weak typeof(self) weakSelf = self;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onTun2SocksFinished) name:kTun2SocksStoppedNotification object:nil];
-    [self startVPNWithOptions:nil completionHandler:^(NSError *error) {
-        if (error == nil) {
+    // 建立一个VPN连接， 处理httpProxyPort端口上的流量
+    [self startVPNWithOptions:nil completionHandler:^(NSError *error)
+     {
+        if (error == nil)
+        {
             [weakSelf addObserver:weakSelf forKeyPath:@"defaultPath" options:NSKeyValueObservingOptionInitial context:nil];
+            // 将VPN流量转为sock流量并送到socksProxyPort端口去
             [TunnelInterface startTun2Socks:[ProxyManager sharedManager].socksProxyPort];
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [TunnelInterface processPackets];
             });
         }
-        if (weakSelf.pendingStartCompletion) {
+        if (weakSelf.pendingStartCompletion)
+        {
             weakSelf.pendingStartCompletion(error);
             weakSelf.pendingStartCompletion = nil;
         }
@@ -180,7 +185,9 @@
 - (void)startVPNWithOptions:(NSDictionary *)options completionHandler:(void (^)(NSError *error))completionHandler {
     NSString *generalConfContent = [NSString stringWithContentsOfURL:[Potatso sharedGeneralConfUrl] encoding:NSUTF8StringEncoding error:nil];
     NSDictionary *generalConf = [generalConfContent jsonDictionary];
+    // 拿到dns
     NSString *dns = generalConf[@"dns"];
+    // 实例化一个IP地址
     NEIPv4Settings *ipv4Settings = [[NEIPv4Settings alloc] initWithAddresses:@[@"192.0.2.1"] subnetMasks:@[@"255.255.255.0"]];
     NSArray *dnsServers;
     if (dns.length) {
@@ -190,6 +197,7 @@
         dnsServers = [DNSConfig getSystemDnsServers];
         NSLog(@"system dns servers: %@", dnsServers);
     }
+    // excludedRoutes包含了一些IP走原来的路径出去，不经过vpn。
     NSMutableArray *excludedRoutes = [NSMutableArray array];
     for (NSString *server in dnsServers) {
         [excludedRoutes addObject:[[NEIPv4Route alloc] initWithDestinationAddress:[server stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] subnetMask:@"255.255.255.255"]];
@@ -199,13 +207,16 @@
     [excludedRoutes addObject:[[NEIPv4Route alloc] initWithDestinationAddress:@"172.16.0.0" subnetMask:@"255.240.0.0"]];
     ipv4Settings.includedRoutes = @[[NEIPv4Route defaultRoute]];
     ipv4Settings.excludedRoutes = excludedRoutes;
+    // 实例化一个IP地址，充当远端的VPN服务器
     NEPacketTunnelNetworkSettings *settings = [[NEPacketTunnelNetworkSettings alloc] initWithTunnelRemoteAddress:@"192.0.2.2"];
+    // 将之前实例化的本地IP地址存到NEPacketTunnelNetworkSettings
     settings.IPv4Settings = ipv4Settings;
     settings.MTU = @(TunnelMTU);
+    // 实例化一个NEProxySetting
     NEProxySettings* proxySettings = [[NEProxySettings alloc] init];
     NSInteger proxyServerPort = [ProxyManager sharedManager].httpProxyPort;
     NSString *proxyServerName = @"localhost";
-
+    // 指定代理的端口
     proxySettings.HTTPEnabled = YES;
     proxySettings.HTTPServer = [[NEProxyServer alloc] initWithAddress:proxyServerName port:proxyServerPort];
     proxySettings.HTTPSEnabled = YES;
@@ -213,6 +224,7 @@
     proxySettings.excludeSimpleHostnames = YES;
     settings.proxySettings = proxySettings;
     settings.DNSSettings = [[NEDNSSettings alloc] initWithServers:dnsServers];
+    // 开启了VPN
     [self setTunnelNetworkSettings:settings completionHandler:^(NSError * _Nullable error) {
         if (error) {
             if (completionHandler) {
