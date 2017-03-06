@@ -122,22 +122,22 @@ extension Proxy {
             if uriString.lowercased().hasPrefix("ss://") {
                 // Shadowsocks
                 let proxyString = uriString.substring(from: uriString.index(uriString.startIndex, offsetBy: 5))
-                guard let pc1 = proxyString.rangeOfString(":")?.startIndex, let pc2 = proxyString.rangeOfString(":", options: .BackwardsSearch)?.startIndex, let pcm = proxyString.rangeOfString("@", options: .BackwardsSearch)?.startIndex else {
+                guard let pc1 = proxyString.range(of: ":")?.lowerBound, let pc2 = proxyString.range(of: ":", options: .backwards)?.lowerBound, let pcm = proxyString.range(of: "@", options: .backwards)?.lowerBound else {
                     throw ProxyError.InvalidUri
                 }
                 if !(pc1 < pcm && pcm < pc2) {
                     throw ProxyError.InvalidUri
                 }
-                let fullAuthscheme = proxyString.lowercaseString.substringWithRange(proxyString.startIndex..<pc1)
-                if let pOTA = fullAuthscheme.rangeOfString("-auth", options: .BackwardsSearch)?.startIndex {
-                    self.authscheme = fullAuthscheme.substringToIndex(pOTA)
+                let fullAuthscheme = proxyString.lowercased().substring(to: pc1)
+                if let pOTA = fullAuthscheme.range(of: "-auth", options: .backwards)?.lowerBound {
+                    self.authscheme = fullAuthscheme.substring(to: pOTA)
                     self.ota = true
                 }else {
                     self.authscheme = fullAuthscheme
                 }
-                self.password = proxyString.substringWithRange(pc1.successor()..<pcm)
-                self.host = proxyString.substringWithRange(pcm.successor()..<pc2)
-                guard let p = Int(proxyString.substringWithRange(pc2.successor()..<proxyString.endIndex)) else {
+                self.password = proxyString.substring(with: proxyString.index(after: pc1)..<pcm)
+                self.host = proxyString.substring(with: proxyString.index(after:pcm)..<pc2)
+                guard let p = Int(proxyString[proxyString.index(after: pc2)..<proxyString.endIndex]) else {
                     throw ProxyError.InvalidPort
                 }
                 self.port = p
