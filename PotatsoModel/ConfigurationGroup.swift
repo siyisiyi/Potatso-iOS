@@ -8,7 +8,7 @@
 
 import RealmSwift
 
-public enum ConfigurationGroupError: ErrorType {
+public enum ConfigurationGroupError: Error {
     case InvalidConfigurationGroup
     case EmptyName
     case NameAlreadyExists
@@ -66,9 +66,9 @@ extension ConfigurationGroup {
         }
         self.name = name
         if realm.objects(RuleSet).filter("name = '\(name)'").first != nil {
-            self.name = ConfigurationGroup.dateFormatter.stringFromDate(NSDate())
+            self.name = ConfigurationGroup.dateFormatter.string(from: NSDate() as Date)
         }
-        if let proxyName = dictionary["proxy"] as? String, proxy = realm.objects(Proxy).filter("name = '\(proxyName)'").first {
+        if let proxyName = dictionary["proxy"] as? String, let proxy = realm.objects(Proxy).filter("name = '\(proxyName)'").first {
             self.proxies.removeAll()
             self.proxies.append(proxy)
         }
@@ -86,7 +86,7 @@ extension ConfigurationGroup {
             self.dns = dns
         }
         if let dns = dictionary["dns"] as? [String] {
-            self.dns = dns.joinWithSeparator(",")
+            self.dns = dns.joined(separator: ",")
         }
     }
 

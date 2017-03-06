@@ -8,7 +8,7 @@
 
 import RealmSwift
 
-public enum RuleSetError: ErrorType {
+public enum RuleSetError: Error {
     case InvalidRuleSet
     case EmptyName
     case NameAlreadyExists
@@ -43,7 +43,7 @@ public final class RuleSet: BaseModel {
         guard name.characters.count > 0 else {
             throw RuleSetError.EmptyName
         }
-        guard realm.objects(RuleSet).filter("name = '\(name)'").first == nil else {
+        guard realm.objects(RuleSet.self).filter("name = '\(name)'").first == nil else {
             throw RuleSetError.NameAlreadyExists
         }
     }
@@ -68,7 +68,7 @@ extension RuleSet {
         }
         self.name = name
         if realm.objects(RuleSet).filter("name = '\(name)'").first != nil {
-            self.name = RuleSet.dateFormatter.stringFromDate(NSDate())
+            self.name = RuleSet.dateFormatter.string(from: NSDate() as Date)
         }
         guard let rulesStr = dictionary["rules"] as? [String] else {
             throw RuleSetError.InvalidRuleSet

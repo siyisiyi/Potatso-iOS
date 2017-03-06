@@ -53,7 +53,7 @@ struct Importer {
     func importSS(source: String) {
         let base64String = source.substringFromIndex(source.startIndex.advancedBy(5))
         let padding = base64String.characters.count + (base64String.characters.count % 4 != 0 ? (4 - base64String.characters.count % 4) : 0)
-        if let decodedData = NSData(base64EncodedString: base64String.stringByPaddingToLength(padding, withString: "=", startingAtIndex: 0), options:   NSDataBase64DecodingOptions(rawValue: 0)), decodedString = NSString(data: decodedData, encoding: NSUTF8StringEncoding) {
+        if let decodedData = NSData(base64EncodedString: base64String.stringByPaddingToLength(padding, withString: "=", startingAtIndex: 0), options:   NSDataBase64DecodingOptions(rawValue: 0)), let decodedString = NSString(data: decodedData, encoding: NSUTF8StringEncoding) {
             do {
                 let proxy = try Proxy(dictionary: ["name": "___scanresult", "uri": "ss://\(decodedString)"], inRealm: defaultRealm)
                 var urlTextField: UITextField?

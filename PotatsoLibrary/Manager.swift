@@ -168,7 +168,7 @@ public class Manager {
     }
 
     public func initDefaultConfigGroup() throws {
-        if let groupUUID = Potatso.sharedUserDefaults().stringForKey(kDefaultGroupIdentifier), group = defaultRealm.objects(ConfigurationGroup).filter("uuid = '\(groupUUID)'").first
+        if let groupUUID = Potatso.sharedUserDefaults().stringForKey(kDefaultGroupIdentifier), let group = defaultRealm.objects(ConfigurationGroup).filter("uuid = '\(groupUUID)'").first
         {
             try setDefaultConfigGroup(group)
         }
@@ -294,7 +294,7 @@ extension Manager {
     
     func generateShadowsocksConfig() throws {
         // 拿出最新的存储的Proxy
-        guard let upstreamProxy = upstreamProxy where upstreamProxy.type == .Shadowsocks else {
+        guard let upstreamProxy = upstreamProxy, upstreamProxy.type == .Shadowsocks else {
             return
         }
         
@@ -559,8 +559,7 @@ extension Manager {
     public func postMessage() {
         loadProviderManager { (manager) -> Void in
             if let session = manager?.connection as? NETunnelProviderSession,
-                message = "Hello".dataUsingEncoding(NSUTF8StringEncoding)
-                where manager?.connection.status != .Invalid
+                let message = "Hello".dataUsingEncoding(NSUTF8StringEncoding), manager?.connection.status != .Invalid
             {
                 do {
                     try session.sendProviderMessage(message) { response in

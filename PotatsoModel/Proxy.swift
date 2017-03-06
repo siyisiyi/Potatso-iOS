@@ -23,7 +23,7 @@ extension ProxyType: CustomStringConvertible {
     
 }
 
-public enum ProxyError: ErrorType {
+public enum ProxyError: Error {
     case InvalidType
     case InvalidName
     case InvalidHost
@@ -122,7 +122,7 @@ extension Proxy {
             if uriString.lowercased().hasPrefix("ss://") {
                 // Shadowsocks
                 let proxyString = uriString.substring(from: uriString.index(uriString.startIndex, offsetBy: 5))
-                guard let pc1 = proxyString.rangeOfString(":")?.startIndex, pc2 = proxyString.rangeOfString(":", options: .BackwardsSearch)?.startIndex, pcm = proxyString.rangeOfString("@", options: .BackwardsSearch)?.startIndex else {
+                guard let pc1 = proxyString.rangeOfString(":")?.startIndex, let pc2 = proxyString.rangeOfString(":", options: .BackwardsSearch)?.startIndex, let pcm = proxyString.rangeOfString("@", options: .BackwardsSearch)?.startIndex else {
                     throw ProxyError.InvalidUri
                 }
                 if !(pc1 < pcm && pcm < pc2) {
@@ -157,10 +157,10 @@ extension Proxy {
             guard let host = dictionary["host"] as? String else{
                 throw ProxyError.InvalidHost
             }
-            guard let typeRaw = (dictionary["type"] as? String)?.uppercaseString, type = ProxyType(rawValue: typeRaw) else{
+            guard let typeRaw = (dictionary["type"] as? String)?.uppercased(), let type = ProxyType(rawValue: typeRaw) else{
                 throw ProxyError.InvalidType
             }
-            guard let portStr = (dictionary["port"] as? String), port = Int(portStr) else{
+            guard let portStr = (dictionary["port"] as? String), let port = Int(portStr) else{
                 throw ProxyError.InvalidPort
             }
             guard let encryption = dictionary["encryption"] as? String else{
@@ -177,7 +177,7 @@ extension Proxy {
             self.type = type
         }
         if realm.objects(RuleSet).filter("name = '\(name)'").first != nil {
-            self.name = Proxy.dateFormatter.stringFromDate(NSDate())
+            self.name = Proxy.dateFormatter.string(from: NSDate() as Date)
         }
         try validate(inRealm: realm)
     }
@@ -189,7 +189,7 @@ extension Proxy {
     public var uri: String {
         switch type {
         case .Shadowsocks:
-            if let authscheme = authscheme, password = password {
+            if let authscheme = authscheme, let password = password {
                 return "ss://\(authscheme):\(password)@\(host):\(port)"
             }
         default:

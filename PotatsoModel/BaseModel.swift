@@ -16,8 +16,8 @@ public func setupDefaultReaml() {
     var config = Realm.Configuration()
     let sharedURL = Potatso.sharedDatabaseUrl()
     if let originPath = config.fileURL?.path {
-        if NSFileManager.defaultManager().fileExistsAtPath(originPath) {
-            _ = try? NSFileManager.defaultManager().moveItemAtPath(originPath, toPath: sharedURL.path!)
+        if FileManager.default.fileExists(atPath: originPath) {
+            _ = try? FileManager.default.moveItem(atPath: originPath, toPath: sharedURL.path)
         }
     }
     config.fileURL = sharedURL
@@ -32,15 +32,15 @@ public func setupDefaultReaml() {
 }
 
 public class BaseModel: Object {
-    public dynamic var uuid = NSUUID().UUIDString
+    public dynamic var uuid = NSUUID().uuidString
     public dynamic var createAt = NSDate().timeIntervalSince1970
     
     override public static func primaryKey() -> String? {
         return "uuid"
     }
     
-    static var dateFormatter: NSDateFormatter {
-        let f = NSDateFormatter()
+    static var dateFormatter: DateFormatter {
+        let f = DateFormatter()
         f.dateFormat = "yyyy-MM-dd HH:mm:ss.FFF"
         return f
     }

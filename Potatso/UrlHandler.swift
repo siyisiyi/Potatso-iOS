@@ -96,7 +96,7 @@ enum URLAction: String {
 
     func autoClose(parameters: Parameters) {
         var autoclose = false
-        if let value = parameters["autoclose"] where value.lowercaseString == "true" || value.lowercaseString == "1" {
+        if let value = parameters["autoclose"], value.lowercaseString == "true" || value.lowercaseString == "1" {
             autoclose = true
         }
         if autoclose {

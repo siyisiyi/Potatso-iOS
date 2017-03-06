@@ -86,7 +86,9 @@ extension RuleAction: CustomStringConvertible {
     
 }
 
-public enum RuleError: ErrorType {
+public enum RuleError: Error {
+//    typealias RawValue = <#type#>
+
     case InvalidRule(String)
 }
 
@@ -150,29 +152,39 @@ extension Rule {
     
     public convenience init(str: String) throws {
         self.init()
-        var ruleStr = str.stringByReplacingOccurrencesOfString("\t", withString: "")
-        ruleStr = ruleStr.stringByReplacingOccurrencesOfString(" ", withString: "")
-        let parts = ruleStr.componentsSeparatedByString(",")
+        var ruleStr = str.replacingOccurrences(of: " ", with: "")
+        ruleStr = ruleStr.replacingOccurrences(of: " ", with: "")
+//            .stringByReplacingOccurrencesOfString(" ", withString: "")
+        let parts = ruleStr.components(separatedBy: ",")
+//            .componentsSeparatedByString(",")
         guard parts.count >= 3 else {
             throw RuleError.InvalidRule(str)
         }
-        let actionStr = parts[2].uppercaseString
-        let typeStr = parts[0].uppercaseString
+        let actionStr = parts[2].uppercased()
+        let typeStr = parts[0].uppercased()
         let value = parts[1]
-        guard let type = RuleType(rawValue: typeStr), action = RuleAction(rawValue: actionStr) where value.characters.count > 0 else {
+        guard let type = RuleType(rawValue: typeStr), let action = RuleAction(rawValue: actionStr), value.characters.count > 0 else {
             throw RuleError.InvalidRule(str)
         }
-        update(type, action: action, value: value)
+        update(type: type, action: action, value: value)
     }
     
     public convenience init(type: RuleType, action: RuleAction, value: String) {
         self.init()
-        update(type, action: action, value: value)
+        update(type: type, action: action, value: value)
     }
     
     public func update(type: RuleType, action: RuleAction, value: String) {
         self.type = type
-        self.content = [ruleActionKey: action.rawValue, ruleValueKey: value].jsonString() ?? ""
+//        self.content = [ruleActionKey: action.rawValue, ruleValueKey: value].jsonString()
+        do{
+            let jsonData = try JSONSerialization.data(withJSONObject: [ruleActionKey: action.rawValue, ruleValueKey: value], options: JSONSerialization.WritingOptions.prettyPrinted)
+            if let JSONString = String(data: jsonData, encoding: String.Encoding.utf8) {
+                self.content = JSONString
+            }
+        }
+        catch{
+        }
     }
     public override var description: String {
         return "\(type), \(value), \(action)"
