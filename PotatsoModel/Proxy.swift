@@ -119,9 +119,9 @@ extension Proxy {
     public convenience init(dictionary: [String: AnyObject], inRealm realm: Realm) throws {
         self.init()
         if let uriString = dictionary["uri"] as? String {
-            if uriString.lowercaseString.hasPrefix("ss://") {
+            if uriString.lowercased().hasPrefix("ss://") {
                 // Shadowsocks
-                let proxyString = uriString.substringFromIndex(uriString.startIndex.advancedBy(5))
+                let proxyString = uriString.substring(from: uriString.index(uriString.startIndex, offsetBy: 5))
                 guard let pc1 = proxyString.rangeOfString(":")?.startIndex, pc2 = proxyString.rangeOfString(":", options: .BackwardsSearch)?.startIndex, pcm = proxyString.rangeOfString("@", options: .BackwardsSearch)?.startIndex else {
                     throw ProxyError.InvalidUri
                 }
